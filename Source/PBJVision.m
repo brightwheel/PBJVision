@@ -339,7 +339,8 @@ PBJMediaWriterDelegate>
         return;
     
     AVCaptureVideoOrientation orientation = AVCaptureVideoOrientationPortrait;
-    switch (_cameraOrientation) {
+    PBJCameraOrientation PBJOrientation = connection == _previewLayer.connection ? _previewOrientation : _cameraOrientation;
+    switch (PBJOrientation) {
         case PBJCameraOrientationPortraitUpsideDown:
             orientation = AVCaptureVideoOrientationPortraitUpsideDown;
             break;
