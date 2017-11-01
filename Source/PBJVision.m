@@ -2170,6 +2170,15 @@ typedef void (^PBJVisionBlock)();
     return [_mediaWriter setupAudioWithSettings:audioCompressionSettings];
 }
 
+- (CMVideoDimensions)getBoundaryAlignedDimensions:(CMVideoDimensions)originalDimensions {
+    const CGFloat targetWidth = ceil(originalDimensions.width / 2) * 2;
+    const CGFloat targetHeight = ceil(originalDimensions.height / 2) * 2;
+    
+    CMVideoDimensions targetDimensions = { targetWidth, targetHeight };
+    return targetDimensions;
+}
+
+
 - (BOOL)_setupMediaWriterVideoInputWithSampleBuffer:(CMSampleBufferRef)sampleBuffer
 {
     CMFormatDescriptionRef formatDescription = CMSampleBufferGetFormatDescription(sampleBuffer);
@@ -2201,6 +2210,8 @@ typedef void (^PBJVisionBlock)();
             break;
     }
     
+    CMVideoDimensions normalizedDimensions = [self getBoundaryAlignedDimensions:videoDimensions];
+    
     NSDictionary *compressionSettings = nil;
     
     if (_additionalCompressionProperties && [_additionalCompressionProperties count] > 0) {
@@ -2215,8 +2226,8 @@ typedef void (^PBJVisionBlock)();
     
     NSDictionary *videoSettings = @{ AVVideoCodecKey : AVVideoCodecH264,
                                      AVVideoScalingModeKey : AVVideoScalingModeResizeAspect,
-                                     AVVideoWidthKey : @(videoDimensions.width),
-                                     AVVideoHeightKey : @(videoDimensions.height),
+                                     AVVideoWidthKey : @(normalizedDimensions.width),
+                                     AVVideoHeightKey : @(normalizedDimensions.height),
                                      AVVideoCompressionPropertiesKey : compressionSettings };
     
     
