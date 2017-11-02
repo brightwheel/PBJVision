@@ -2171,13 +2171,12 @@ typedef void (^PBJVisionBlock)();
 }
 
 - (CMVideoDimensions)getBoundaryAlignedDimensions:(CMVideoDimensions)originalDimensions {
-    const CGFloat targetWidth = ceil(originalDimensions.width / 2) * 2;
-    const CGFloat targetHeight = ceil(originalDimensions.height / 2) * 2;
+    int32_t targetWidth = (int32_t)(ceil(originalDimensions.width / 2) * 2);
+    int32_t targetHeight = (int32_t)(ceil(originalDimensions.height / 2) * 2);
     
     CMVideoDimensions targetDimensions = { targetWidth, targetHeight };
     return targetDimensions;
 }
-
 
 - (BOOL)_setupMediaWriterVideoInputWithSampleBuffer:(CMSampleBufferRef)sampleBuffer
 {
@@ -2211,7 +2210,7 @@ typedef void (^PBJVisionBlock)();
     }
     
     CMVideoDimensions normalizedDimensions = [self getBoundaryAlignedDimensions:videoDimensions];
-    
+
     NSDictionary *compressionSettings = nil;
     
     if (_additionalCompressionProperties && [_additionalCompressionProperties count] > 0) {
