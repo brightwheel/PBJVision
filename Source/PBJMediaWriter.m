@@ -197,7 +197,10 @@
 
         _assetWriterVideoInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:videoSettings];
         _assetWriterVideoInput.expectsMediaDataInRealTime = YES;
-        _assetWriterVideoInput.transform = CGAffineTransformIdentity;
+        
+        // brightwheel fix - we're scaling up to crop at least 16 px from the edge to remove encoding artifacts that appear in iOS 11.
+        // 1.05 is the value that should ensure at least 16 px cropped on each side on the smallest screen width: 640 px (1 + ((16 * 2)) / 640))
+        _assetWriterVideoInput.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.05, 1.05);
 
         if (additional != nil) {
             NSNumber *angle = additional[PBJVisionVideoRotation];
